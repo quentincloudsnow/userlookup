@@ -3,10 +3,11 @@ info:
   title: User Verification API
   version: 1.0.0
 paths:
-  /verify:
+  /verify-user:
     post:
       summary: Verify if a user exists
       requestBody:
+        required: true
         content:
           application/json:
             schema:
