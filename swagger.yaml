@@ -2,7 +2,9 @@ openapi: 3.0.0
 info:
   title: User Checker API
   version: 1.0.0
-host: "userlookupapi.westus2.cloudapp.azure.com"
+servers:
+  - url: http://userlookupapi.westus2.cloudapp.azure.com
+    description: Production server (uses live data)
 paths:
   /checkUser:
     get:
