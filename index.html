@@ -2,15 +2,56 @@
 <html>
 <head>
     <title>User Verification</title>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.2.0/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.2.0/swagger-ui-standalone-preset.js"></script>
 </head>
 <body>
+    <div id="swagger-ui"></div>
+    <script>
+        window.onload = function() {
+            const ui = SwaggerUIBundle({
+                url: "openapi.yaml", // Path to your OpenAPI specification file
+                dom_id: "#swagger-ui",
+                presets: [SwaggerUIStandalonePreset],
+            });
+
+            // Custom JavaScript code to handle API interaction
+            const firstNameInput = document.getElementById("firstName");
+            const lastNameInput = document.getElementById("lastName");
+            const verifyButton = document.getElementById("verifyButton");
+            const resultElement = document.getElementById("result");
+
+            verifyButton.addEventListener("click", async () => {
+                try {
+                    const firstName = firstNameInput.value;
+                    const lastName = lastNameInput.value;
+
+                    const response = await fetch("/verify-user", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            firstName: firstName,
+                            lastName: lastName,
+                        }),
+                    });
+
+                    const responseData = await response.json();
+                    resultElement.innerText = responseData.message;
+                } catch (error) {
+                    console.error("An error occurred:", error);
+                    resultElement.innerText = "An error occurred.";
+                }
+            });
+        };
+    </script>
     <h1>User Verification</h1>
     <label for="firstName">First Name:</label>
     <input type="text" id="firstName" required>
     <label for="lastName">Last Name:</label>
     <input type="text" id="lastName" required>
-    <button onclick="verifyUser()">Verify User</button>
+    <button id="verifyButton">Verify User</button>
     <p id="result"></p>
 </body>
 </html>
