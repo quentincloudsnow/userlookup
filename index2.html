@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Verification</title>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.2.0/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.2.0/swagger-ui-standalone-preset.js"></script>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script>
+        window.onload = function() {
+            const ui = SwaggerUIBundle({
+                url: "openapi.yaml", // Path to your OpenAPI specification file
+                dom_id: "#swagger-ui",
+                presets: [SwaggerUIStandalonePreset],
+            });
+        };
+    </script>
+</body>
+</html>
