@@ -2,6 +2,7 @@ openapi: 3.0.0
 info:
   title: User Checker API
   version: 1.0.0
+  
 servers:
   - url: https://userlookupapi.westus2.cloudapp.azure.com
     description: Production server (uses live data)
@@ -11,11 +12,23 @@ paths:
       summary: Check if a user exists
       parameters:
         - in: query
-          name: username
+          name: firstname
           schema:
             type: string
           required: true
-          description: Username to check
+          description: First name of the user
+        - in: query
+          name: lastname
+          schema:
+            type: string
+          required: true
+          description: Last name of the user
+        - in: query
+          name: dateofbirth
+          schema:
+            type: string
+          required: true
+          description: Date of birth of the user (format: YYYY-MM-DD)
       responses:
         '200':
           description: User existence result
@@ -23,7 +36,7 @@ paths:
             application/json:
               example:
                 message: User exists
-        '201':
+        '404':
           description: User not found
           content:
             application/json:
