@@ -3,7 +3,7 @@ info:
   title: User Checker API
   version: 1.0.0
 servers:
-  - url: http://userlookupapi.westus2.cloudapp.azure.com
+  - url: https://userlookupapi.westus2.cloudapp.azure.com
     description: Production server (uses live data)
 paths:
   /checkUser:
