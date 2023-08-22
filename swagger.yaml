@@ -23,7 +23,7 @@ paths:
             application/json:
               example:
                 message: User exists
-        '200':
+        '201':
           description: User not found
           content:
             application/json:
