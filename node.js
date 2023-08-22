@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const data = require('./data.json'); // Assuming data.json is in the same directory
 //begin quentin custom
+const cors = require('cors');
 app.use(cors({
     origin: '*'
 }));
