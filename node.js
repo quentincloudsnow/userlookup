@@ -7,8 +7,6 @@ const data = require('./data.json'); // Assuming data.json is in the same direct
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'https://quentincloudsnow.github.io');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
@@ -20,13 +18,19 @@ app.use((req, res, next) => {
 
 
 app.get('/checkUser', (req, res) => {
-          const { username } = req.query;
-          const userExists = data.some(user => user.username === username);
-          if (userExists) {
-                      res.status(200).json({ message: 'User exists' });
-                    } else {
-                                res.status(200).json({ message: 'User does not exist' });
-                              }
+  const { firstname, lastname, dateofbirth } = req.query;
+
+  const userExists = data.some(user =>
+    user.firstname === firstname &&
+    user.lastname === lastname &&
+    user.dateofbirth === dateofbirth
+  );
+ const response = {
+    code: userExists ? 0 : 1,
+    message: userExists ? 'User exists' : 'User does not exist'
+  };
+
+  res.status(200).json(response);
 });
 
 app.listen(3000, () => {
