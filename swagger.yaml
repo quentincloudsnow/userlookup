@@ -36,10 +36,5 @@ paths:
           content:
             application/json:
               example:
-                message: User exists
-        '404':
-          description: User not found
-          content:
-            application/json:
-              example:
-                message: User does not exist
+                code: 0 or 1
+                message: User exists or User does not exist
