@@ -1,10 +1,14 @@
 [
   {
-    "username": "user1",
-    "name": "User One"
+    "firstname": "John",
+    "lastname": "Doe",
+    "dateofbirth": "1990-01-15",
+    "username": "user1"
   },
   {
-    "username": "user2",
-    "name": "User Two"
+    "firstname": "Jane",
+    "lastname": "Smith",
+    "dateofbirth": "1985-06-20",
+    "username": "user2"
   }
 ]
