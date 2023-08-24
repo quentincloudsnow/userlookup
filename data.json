@@ -16,5 +16,11 @@
     "lastname": "Smith",
     "dateofbirth": "12-22-1980",
     "username": "paul.smith"
+  },
+   {
+    "firstname": "Fred",
+    "lastname": "Luddy",
+    "dateofbirth": "12-25-1965",
+    "username": "fred.luddy"
   }
 ]
