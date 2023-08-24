@@ -10,5 +10,11 @@
     "lastname": "Smith",
     "dateofbirth": "1985-06-20",
     "username": "user2"
+  },
+   {
+    "firstname": "Quentin",
+    "lastname": "Carton",
+    "dateofbirth": "1980-12-12",
+    "username": "quentin.carton"
   }
 ]
