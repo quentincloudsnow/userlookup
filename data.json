@@ -2,19 +2,19 @@
   {
     "firstname": "John",
     "lastname": "Doe",
-    "dateofbirth": "1990-01-15",
+    "dateofbirth": "08-31-1977",
     "username": "user1"
   },
   {
     "firstname": "Jane",
     "lastname": "Smith",
-    "dateofbirth": "1985-06-20",
+    "dateofbirth": "08-31-1977",
     "username": "user2"
   },
    {
-    "firstname": "Quentin",
-    "lastname": "Carton",
-    "dateofbirth": "1980-12-23",
-    "username": "quentin.carton"
+    "firstname": "Paul",
+    "lastname": "Smith",
+    "dateofbirth": "12-22-1980",
+    "username": "paul.smith"
   }
 ]
