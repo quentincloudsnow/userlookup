@@ -42,15 +42,6 @@ paths:
                     type: string
                   message:
                     type: string
-                    examples:
-                      example1:
-                        summary: Example 1 - User found
-                        value:
-                          code: 0
-                          message: User exists
-                      example2:
-                        summary: Example 2 - User not found
-                        value:
-                          code: 1
-                          message: User does not exist
-
+              example:
+                code: "0"
+                message: User exists
