@@ -29,7 +29,7 @@ paths:
           schema:
             type: string
           required: true
-          description: Date of birth of the user (format: YYYY-MM-DD)
+          description: YYYY-MM-DD
       responses:
         '200':
           description: User existence result
