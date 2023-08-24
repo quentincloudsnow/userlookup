@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 // ... rest of your app's routes and logic
-
+//Quentin to add error handling
 
 app.get('/checkUser', (req, res) => {
   const { firstname, lastname, dateofbirth } = req.query;
