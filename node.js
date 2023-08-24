@@ -25,7 +25,7 @@ app.get('/checkUser', (req, res) => {
     user.lastname === lastname &&
     user.dateofbirth === dateofbirth
   );
- const response = {
+const response = {
     code: userExists ? 0 : 1,
     message: userExists ? 'User exists' : 'User does not exist'
   };
