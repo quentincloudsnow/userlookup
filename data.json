@@ -15,7 +15,7 @@
   {
     "firstname": "Jane",
     "lastname": "Smith",
-    "dateofbirth": "1985-05-15",
+    "dateofbirth": "01/01/1999",
     "guest_title": "Guest",
     "phone": "555-123-4567",
     "host_name": "John Doe",
