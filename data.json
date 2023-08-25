@@ -2,7 +2,7 @@
   {
     "firstname": "Judy",
     "lastname": "Doe",
-    "dateofbirth": "01/01/1997",
+    "dateofbirth": "1997-01-01",
     "guest_title": "Guest",
     "phone": "123-456-7890",
     "host_name": "Jane Smith",
