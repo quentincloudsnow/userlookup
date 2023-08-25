@@ -2,27 +2,25 @@
   {
     "firstname": "John",
     "lastname": "Doe",
-    "dateofbirth": "1990-01-01",
-    "guest_title": "Guest",
-    "phone": "123-456-7890",
-    "host_name": "Jane Smith",
-    "host_id_number": "987654",
-    "host_email": "jane@example.com",
-    "guest_email": "john@example.com",
-    "building_location": "Building A",
-    "access_expiration": "2023-12-31"
+    "dateofbirth": "08-31-1977",
+    "username": "user1"
   },
   {
     "firstname": "Jane",
     "lastname": "Smith",
-    "dateofbirth": "1985-05-15",
-    "guest_title": "Guest",
-    "phone": "555-123-4567",
-    "host_name": "John Doe",
-    "host_id_number": "123456",
-    "host_email": "john@example.com",
-    "guest_email": "jane@example.com",
-    "building_location": "Building B",
-    "access_expiration": "2023-12-31"
+    "dateofbirth": "08-31-1977",
+    "username": "user2"
+  },
+   {
+    "firstname": "Paul",
+    "lastname": "Smith",
+    "dateofbirth": "12-22-1980",
+    "username": "paul.smith"
+  },
+   {
+    "firstname": "Fred",
+    "lastname": "Luddy",
+    "dateofbirth": "12-25-1965",
+    "username": "fred.luddy"
   }
 ]
