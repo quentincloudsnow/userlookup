@@ -13,16 +13,16 @@
     "access_expiration": "2023-12-31"
   },
   {
-    "firstname": "Jane",
-    "lastname": "Smith",
-    "dateofbirth": "1985-05-15",
+    "firstname": "Regina",
+    "lastname": "Ranoa",
+    "dateofbirth": "1961-06-21",
     "guest_title": "Guest",
     "phone": "555-123-4567",
     "host_name": "John Doe",
     "host_id_number": "123456",
     "host_email": "john@example.com",
-    "guest_email": "jane@example.com",
-    "building_location": "Building B",
-    "access_expiration": "2023-12-31"
+    "guest_email": "regina.ranoa@mycorp.com",
+    "building_location": "Building A",
+    "access_expiration": "2023-10-31"
   }
 ]
