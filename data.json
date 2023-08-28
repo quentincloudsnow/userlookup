@@ -25,4 +25,17 @@
     "building_location": "Building A",
     "access_expiration": "2023-10-31"
   }
+  {
+    "firstname": "Ashley",
+    "lastname": "Burney",
+    "dateofbirth": "1984-01-25",
+    "guest_title": "Guest",
+    "phone": "555-123-4567",
+    "host_name": "John Doe",
+    "host_id_number": "123456",
+    "host_email": "john@example.com",
+    "guest_email": "ashley.burney@mycorpabc.com",
+    "building_location": "Building AZ",
+    "access_expiration": "2023-11-11"
+  }
 ]
