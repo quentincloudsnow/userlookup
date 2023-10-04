@@ -29,7 +29,7 @@ This is a fairly simple API. As you can see, there is only one API method, 'chec
    
 
 
-By passing those user information, the API will return a message stating is a user exist or not, if the user exist, it will return additonal information that you need to use in a ServiceNow workflow, see the example of response returned by the API
+By passing those user information, the API will return a message stating if a user exist or not, if the user exist, it will return additonal information that you need to use in a ServiceNow workflow, see the example of response returned by the API
 
  
       {
@@ -83,7 +83,7 @@ On the next screen, **Visitor Access: Add operations**, this is where you can pr
 
 ![Alt text](img/2023-09-21_07-39-25.png)
 
-Past the URL copied in your clipboard in the previous step, the past it in the **OpenAPI URL** field (1), then click **Import** (2) 
+Paste the URL copied in your clipboard in the previous step, then paste it in the **OpenAPI URL** field (1), then click **Import** (2) 
 
 ![Alt text](img/2023-09-21_07-42-47.png)
 
@@ -109,7 +109,7 @@ The system will then prompt you to select which Spoke Action you want to create 
 
 ![Alt text](img/2023-09-21_07-59-26.png)
 
-> For this lab, we are using a very simple API created specifically for lab and learning puropose. This API has only one method, which is why only one action is displayed. In reality, most commercial applications you attempt to integrate will have tens or even hundreds of methods in their API. You will be able to select the methods you want to leverage from ServiceNow and create Spoke Actions for them.
+> For this lab, we are using a very simple API created specifically for lab and learning purpose. This API has only one method, which is why only one action is displayed. In reality, most commercial applications you attempt to integrate will have tens or even hundreds of methods in their API. You will be able to select the methods you want to leverage from ServiceNow and create Spoke Actions for them.
 
 Select the ** Check if a user exists** (1) Action then click **Publish** (2)
 
@@ -133,23 +133,23 @@ Click the OpenAPI Step (1)
 
 ![Alt text](img/2023-09-21_08-24-59.png)
 
-Notice thre step inputs, they are using the Action inputs, so the values from the Action Inputs will be passed as parameters when the API Call is made to the external system.
+Notice the step inputs, they are using the Action inputs, so the values from the Action Inputs will be passed as parameters when the API Call is made to the external system.
 
 ![Alt text](img/2023-09-21_08-26-21.png)
 
-We need to update the Connection Alias in the Connection Details section. we have precreated in this lab instance a Connection record that point to the right API End point. We are going to use this one. 
+We need to update the Connection Alias in the Connection Details section. We have precreated in this lab instance a Connection record that point to the right API End point. We are going to use this one. 
 
 Click on the **Connection Alias field** (1) then select **VisitorAccess_ConnectionAlias** (2) 
 
 ![Alt text](img/2023-09-21_08-30-48.png)
 
-Notice the **Base URL** field was updated and showing the URL for the API End point. Those connection alias record are tyipically managed by Security team or someone with higher privilege.
+Notice the **Base URL** field was updated and displays the URL for the API End point. Those connection alias records are tyipically managed  a by Security team or user with higher privileges.
 
 On the right hand-side notice the outputs available from the OpenAPI Step, expand the **user** (1) section as shown below:
 
 ![Alt text](img/2023-09-21_08-35-00.png)
 
-Those are alll the values that we can retrieve from the external app and use in a ServiceNow Worlflow.
+Those are all the values that we can retrieve from the external app and use in a ServiceNow Workflow.
 
 It's time to test that Spoke Action! Click on the **Test** button 
 
@@ -167,7 +167,7 @@ You will be prompted to enter some user information, **dateofbirth** (1), **firs
 
 Then click **Run Test** (4)
 
->Note Typically those values will be passed to the action via a Worflow. we are just testing the action manually right now
+>Note: Typically those values will be passed to the action via a Workflow. we are just testing the action manually right now.
 
 Once the Action has been executed, click on **Your test has finished running. View the Action execution details** (1) to inspect the response we have received from the external system.
 
@@ -178,7 +178,7 @@ and click on the output detail (1)
 
 ![Alt text](<img/2023-09-21_08-52-31 (1).png>)
 
-You should see a screen similar to this. Notic the response returned by the API. it contains the return code, message and additional user information. Our new Spoke Action works!
+You should see a screen similar to this. Notice the response returned by the API. It contains the return code, message and additional user information. Our new Spoke Action works!
 
 Now let's use from a flow! 
 
@@ -194,7 +194,7 @@ Click on **Create New** (1) then **Subflow** (2)
 
 Enter a **Subflow name** (put the name you want) and click **submit** (leave all other field with default values)
 
-> Note: typicalla a builder would create a new flow or subflow in his own Application Scope, but for that quick test in a lab intance it does not matter we can save in the Global scope.
+> Note: Typically a builder would create a new flow or subflow in his own Application Scope, but for a quick test in a lab instance it doesn't matter we can save it in the Global scope.
 
 ![Alt text](img/2023-09-21_09-02-25.png)
 
@@ -207,7 +207,7 @@ Select Action then type **Visit**, this should display your new spoke **Visitor 
 
 ![Alt text](img/2023-09-21_09-07-17.png)
 
-Now we can pass the value to the action, here we are going to hardcode values just for test purpose, typically we would lookup a record in servicenow and pass values from that record to the action. We will cover that in detail in the optional section of the lab.
+Now we can pass the value to the action, here we are going to hardcode values just for test purposes, typically we would lookup a record in ServiceNow and pass values from that record to the action. We will cover that in detail in the optional section of the lab.
 
 | Field | Value |
    |-------|-------|
@@ -227,7 +227,9 @@ Click **Your Test has finished running, View the subflow exectution details**
 
 ![Alt text](img/2023-09-21_09-20-06.png)
 
-We have seen in this lab how to create a new Spoke using the spoke generator, to integrate ServiceNow with an external application that have an API we can use.  In the optional section of this lab we are going to cover some more advanced concepts of flow designer/Ihub and use the value retrieved from the spoke action to update a record in ServiceNow.
+We have seen in this lab how to create a new Spoke using the spoke generator, to integrate ServiceNow with an external application that has an API we can use.  In the optional section of this lab we are going to cover some more advanced concepts of flow designer/Ihub and use the value retrieved from the spoke action to update a record in ServiceNow.
+
+> Note: With the spoke generator you no longer need to configure the REST Step and JSON Parser Step manually, the spoke action generated with Spoke Generator does that for you automatically
 
 # Optional section
 
@@ -429,7 +431,7 @@ Add a **IF** statement by clicking **Flow Logic** (1), then **If** (2)
 
 ![Alt text](img/2023-09-22_08-15-35.png)
 
-In the **Condition Label** field (1), copy and past this text : "User has been pre registered in remote visitor system"  
+In the **Condition Label** field (1), copy and paste this text : "User has been pre registered in remote visitor system"  
 > this is just to make it easier for someone who read the flow to understand the logic
 
 then in the Condition 
