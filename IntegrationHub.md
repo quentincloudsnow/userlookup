@@ -468,8 +468,8 @@ Click **Add Field value** (1)
 
 then add those fields
 
-| Field | Value |
-   |-------|-------|
+| Field |
+   |-------|
    | Access Expiration | 1984-01-25|
    | Building Location | Ashley |
    | Guest Title | Burney |
