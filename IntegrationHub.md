@@ -413,7 +413,7 @@ Notice the value are all stored in uppercase in ServiceNow, and the date of birt
 
 Click on the **Check if a user exists** (1) step to check if the values were transformed correctly:
 
-![Alt text](img/2023-09-22_08-02-52.png)
+![Alt text](img/2023-10-05_08-43-30.png)
 
 If you continue to scroll down, you should be able to see the output that contains the response from the API End point
 
