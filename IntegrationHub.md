@@ -6,20 +6,21 @@ IntegrationHub is the central place on the platform for consuming, creating, and
 
 ## Goal 
 
-In this lab, we will highlight the new 'Spoke Generator' capability. This feature allows you to create new spokes and spoke actions for third-party APIs that comply with the OpenAPI specification. You will utilize a provided YAML file. 
-   > A YAML file for OpenAPI specs is a human-readable configuration file that defines the structure, endpoints, and details of a RESTful API, making it easier for developers to document and communicate the API's design. The spoke generator can automatically leverage this YAML file to create spoke actions.
+In this lab, we will showcase the new 'Spoke Generator' capability. This feature enables you to generate new spokes and spoke actions for third-party APIs that adhere to the OpenAPI specification. You will be using a provided YAML file.
+
+   > A YAML file for OpenAPI specs is a user-friendly configuration file that defines the structure, endpoints, and details of a RESTful API. It makes it easier for developers to document and communicate the API's design. The spoke generator can automatically utilize this YAML file to create spoke actions.
    
-This new feature "Spoke Generator" accelerates the time it takes to create a new integration.
+This innovative feature, the "Spoke Generator," significantly reduces the time required to create a new integration.
 
 ## Use case
 
-ACME Inc. is using a third-party system to manage visitor access and authorization to their buildings. This system is managed by a Security and Property Management company. ACME Inc. would like to improve the experience for visitors and their employees. ACME Inc. uses ServiceNow and would like to automate the process of verifying visitor access and badge printing using ServiceNow workflows. ACME inc. has created a modern experience using the ServiceNow platform, visitors can self check in via a kiosk at the reception of each buildings.
+ACME Inc. currently uses a third-party system for managing visitor access and authorization to their buildings, which is overseen by a Security and Property Management company. ACME Inc. aims to enhance the experience for both visitors and employees. They utilize ServiceNow and intend to automate the process of verifying visitor access and printing badges through ServiceNow workflows. ACME Inc. has developed a modernized experience using the ServiceNow platform, allowing visitors to independently check in via kiosks located at the reception of each building.
 
-However,there are no out-of-the-box integrations available for that Visitor Access application that is hosted and managed outside of the ServiceNow Platform. As a ServiceNow builder, we need to create that integration (Spoke) so that we can query this remote system from a workflow that will be triggered when visitor checks in at the kiosk
+However, there are no pre-built integrations available for the Visitor Access application, which is hosted and managed externally to the ServiceNow Platform. As ServiceNow developers, our task is to create this integration (Spoke) so that we can retrieve information from this remote system through a workflow triggered when a visitor checks in at the kiosk.
 
-In this scenario, you had a meeting with the administrator of the third-party visitor access app, who has provided you with the following API documentation: [API Documentation Link](https://quentincloudsnow.github.io/userlookup/#/default/get_checkUser). You can open the link to understand how that API works.
+In this scenario, you had a meeting with the administrator of the third-party visitor access app who has supplied you with the following API documentation: [API Documentation Link](https://quentincloudsnow.github.io/userlookup/#/default/get_checkUser). You can click the link to gain an understanding of how this API functions.
 
-This is a fairly simple API. As you can see, there is only one API method, 'checkUser,' and that method requires three inputs."
+This API is relatively straightforward. As you can observe, it consists of only one API method, 'checkUser,' and this method necessitates three inputs."
 
 | Field | type |
    |-------|-------|
@@ -29,7 +30,7 @@ This is a fairly simple API. As you can see, there is only one API method, 'chec
    
 
 
-By passing those user information, the API will return a message stating if a user exist or not, if the user exist, it will return additonal information that you need to use in a ServiceNow workflow, see the example of response returned by the API
+By providing the user information, the API will return a message indicating whether a user exists or not. If the user does exist, it will also provide additional information that you will need to utilize within a ServiceNow workflow. You can refer to the example of the response returned by the API for clarification
 
  
       {
@@ -47,7 +48,7 @@ By passing those user information, the API will return a message stating if a us
                }
       }
 
-In the JSON response, you will receive a 'code' indicating success (0), a 'message' stating that the user exists, and detailed 'user' information including guest title, phone number, host name, host ID number, email addresses, building location, and access expiration date. If the user does not exist you will receive a code 1. In our scenario, the user data we get from the response will be used to Print a badge for the visitor. (the Badge printing process is covered in another lab with our RPA Hub technology)
+In the JSON response, you will receive a 'code' indicating success (0), a 'message' confirming the user's existence, and comprehensive 'user' information, which includes guest title, phone number, host name, host ID number, email addresses, building location, and access expiration date. If the user does not exist, you will receive a code 1. In our particular scenario, the user data obtained from the response will be utilized to print a badge for the visitor. (The badge printing process is addressed in another lab using our RPA Hub technology.)
 
 ## Creating the spoke
 
@@ -59,7 +60,7 @@ Once you are in the **Flow Designer** UI, to access the Spoke Generator, select 
 
 ![Alt text](img/2023-09-21_07-19-21.png)
 
-The Spoke Generator prompts you for a thumbnail Image (1)  (You can upload a thumbnail image to be your Spoke logo (feel free to find a free image on google image and upload it here), Spoke Name (2) and a Description (4)
+The Spoke Generator will request the following information from you: a thumbnail image (1) (you can upload a thumbnail image to serve as your Spoke logo; feel free to find a free image on Google Images and upload it here), a Spoke Name (2), and a Description (4).
 
 ![Alt text](img/2023-09-21_07-27-27.png)
 
@@ -73,7 +74,7 @@ Once you have set the value, click Create and Continue (1) as shown below:
 
    ![Alt text](img/2023-09-21_07-33-06.png)
 
-On the next screen, you will be prompted to choose the method you want to use to create your new spoke. We want to use the OpenAPI Specification method since we have been provided with the YAML File that describes the API and complies with the OPENAPI Specification.
+On the next screen, you will be prompted to select the method you wish to use for creating your new spoke. We intend to utilize the OpenAPI Specification method, as we have been furnished with the YAML file that describes the API and adheres to the OPENAPI Specification.
 
 Select **OpenAPI Specification** (1) then click **Continue** (2)
 
@@ -93,7 +94,7 @@ Once the import is done you should see someting similar to this
 
 Then click on **Create New** next to the **Connection Alias field** (1) 
 
-> In ServiceNow, a Connection Alias is a configuration setting used to define and manage external system connections. It serves as an abstraction layer for connecting to external systems and simplifies the process of integrating with those systems within ServiceNow workflows and other components. Typically when your connect ServiceNow to an external system, you need to configure the URL of the end-point (3rd party system) and how to authenticate with it. We do this using Connection and Credentials in ServiceNow, In real life obviously a conversation with the admin of the remote system needs to happen and also with the security team before starting to configure this.
+> Note: In ServiceNow, a Connection Alias is a configuration setting used to establish and oversee connections with external systems. It functions as an abstraction layer for connecting to external systems and streamlines the integration process within ServiceNow workflows and other components. Normally, when connecting ServiceNow to an external system, you must configure the URL of the endpoint (the third-party system) and specify how to authenticate with it. This is accomplished through Connection and Credentials settings in ServiceNow. In practice, it is essential to engage in discussions with the administrator of the remote system and coordinate with the security team before initiating this configuration.
 
 ![Alt text](img/2023-09-21_07-45-32.png)
 
@@ -109,17 +110,11 @@ The system will then prompt you to select which Spoke Action you want to create 
 
 ![Alt text](img/2023-09-21_07-59-26.png)
 
-> For this lab, we are using a very simple API created specifically for lab and learning purpose. This API has only one method, which is why only one action is displayed. In reality, most commercial applications you attempt to integrate will have tens or even hundreds of methods in their API. You will be able to select the methods you want to leverage from ServiceNow and create Spoke Actions for them.
+> Note: For this lab, we are utilizing a very basic API designed explicitly for lab and educational purposes. This API consists of just one method, which is why only one action is visible. In real-world scenarios, most commercial applications you endeavor to integrate will have dozens or even hundreds of methods within their API. You will have the option to choose the methods you wish to utilize from ServiceNow and create Spoke Actions for them.
 
 Select the ** Check if a user exists** (1) Action then click **Publish** (2)
 
 ![Alt text](img/2023-09-21_08-16-44.png)
-
-> Note that if you have the choice to save it as draft, which is probably what we should do in real life instead of publishing the action right away and make it available to flow developer... in the lab we just publish it right away: 
-
-![Alt text](img/2023-09-21_08-16-07.png)
-
-> the screenshot above is just to show you that you can Save as Draft, do not click **Save Actions as Draft**
 
 Click the newly created Spoke Action **Check if a user exists** (1) this will open the Action editor in Flow designer so we can inspect it 
 
@@ -143,7 +138,7 @@ Click on the **Connection Alias field** (1) then select **VisitorAccess_Connecti
 
 ![Alt text](img/2023-09-21_08-30-48.png)
 
-Notice the **Base URL** field was updated and displays the URL for the API End point. Those connection alias records are tyipically managed  a by Security team or user with higher privileges.
+Notice the **Base URL** field was updated and displays the URL for the API End point. Those connection alias records are typically managed a by Security team or user with higher privileges.
 
 On the right hand-side notice the outputs available from the OpenAPI Step, expand the **user** (1) section as shown below:
 
@@ -227,30 +222,29 @@ Click **Your Test has finished running, View the subflow exectution details**
 
 ![Alt text](img/2023-09-21_09-20-06.png)
 
-We have seen in this lab how to create a new Spoke using the spoke generator, to integrate ServiceNow with an external application that has an API we can use.  In the optional section of this lab we are going to cover some more advanced concepts of flow designer/Ihub and use the value retrieved from the spoke action to update a record in ServiceNow.
+In this lab, we've learned how to create a new Spoke using the Spoke Generator, allowing us to integrate ServiceNow with an external application featuring a usable API. In the optional section of this lab, we will delve into more advanced concepts of Flow Designer/Ihub and demonstrate how to employ the value retrieved from the Spoke action to update a record in ServiceNow.
 
-> Note: With the spoke generator you no longer need to configure the REST Step and JSON Parser Step manually, the spoke action generated with Spoke Generator does that for you automatically
+> Note: With the Spoke Generator, you no longer need to manually configure the REST Step and JSON Parser Step; the Spoke action generated by the Spoke Generator handles this automatically for you.
 
 # Optional section
 
 ## Introduction
 
-Dealing with integration is often time not as easy as this lab make it sound. In this scenario we are passing data to an API. 
-The API is expecting the data to be in a certain format. In this optional lab we are going to see how you can appply data transformation in Flow Designer before passing the data to the external API.
+Handling integrations is often not as straightforward as this lab may suggest. In the previous section of the lab, the data was sent to the API in the same format as it was in ServiceNow. However, in this scenario, we are sending data to an API that expects the data to be in a specific format. In this optional lab, we will explore how to apply data transformation in Flow Designer before sending the data to the external API.
 
-On your instance, click on the **All** menu (1) and in the filter navigator (2) type the x_snc_visitoracc_0_visitors_list.do and press enter to open that custom table.
+On your instance, navigate to the **All** menu (1) and in the filter navigator (2), type "x_snc_visitoracc_0_visitors_list.do" and press enter to open that custom table.
 
 ![Alt text](img/2023-09-21_12-01-25.png)
 
-In this use case, a custom table is utilized by a ServiceNow app developed by ACME Inc. When a visitor checks in at the reception of their building, they can scan their government ID. Using our DocIntel capability, a new record is created in that table for the visitor. Information such as the First Name, Last Name, and Date of Birth of the visitor is then extracted from their government id and stored in that table. In the following section, we will focus on creating the workflow that will take this data, transform it, and use it with the new spoke we created earlier in this lab.
+In this use case, a custom table is utilized by a ServiceNow app developed by ACME Inc. When a visitor checks in at the reception of their building, they can scan their government ID. Using our DocIntel capability, a new record is generated in that table for the visitor. Information such as the First Name, Last Name, and Date of Birth of the visitor is then extracted from their government ID and stored in that table. In the following section, we will concentrate on creating the workflow that will take this data, transform it, and utilize it with the new spoke we created earlier in this lab.
 
-Notice the Visitor First Name and Visitor Last Name values (1); they are in uppercase. Then, notice the Date of Birth (2); it is in the MM/DD/YYYY format.
+Please note the following details: Visitor First Name and Visitor Last Name values (1) are in uppercase. Additionally, observe the Date of Birth (2), which is in the MM/DD/YYYY format.
 
 ![Alt text](img/2023-09-21_12-27-20.png)
 
-The external API for which we created a new spoke action earlier won't recognize those values in that format. The API is expecting this format Firstname, Lastname and a date in that format YYYY-MM-DD.
+The external API for which we previously created a new spoke action won't recognize those values in that format. The API expects the format to be Firstname, Lastname, and a date in the YYYY-MM-DD format.
 
-Let's create the workflow that is gonna query that API to validate that the user has all the authorization to access the building, we are going to use Data Tranform and use our new Spoke Action for this.
+Now, let's create the workflow that will query the API to verify whether the user has the necessary authorization to access the building. We will utilize a Data Transform and our newly created Spoke Action for this purpose.
 
 Open Flow Designer 
 
@@ -282,11 +276,11 @@ Set the condition as shown below
 
 ![Alt text](img/2023-09-21_12-46-22.png)
 
-> Note: With this condition we are setting above, the flow will be triggered as soon as Docintel extract data from the visitor government id and update the visitor record associated to that visitor. 
+> Note: With the condition we are setting above, the flow will be triggered as soon as Docintel extracts data from the visitor's government ID and updates the visitor record associated with that visitor.
 
 Now we need to add to our flow the spoke action that we have created earlier in this lab.
 
-Under the **Actions** section, click **Action** (1), type ** visitor access** (2) then select **Visitor Access** from the **INSTALLED SPOKES** list (3) then click **Check if a use exists** (4) 
+Under the **Actions** section, click **Action** (1), type **visitor access** (2) then select **Visitor Access** from the **INSTALLED SPOKES** list (3) then click **Check if a use exists** (4) 
 
 ![Alt text](img/2023-09-21_12-50-00.png)
 
@@ -306,9 +300,9 @@ Grab those data fields and drop thenm to our action inputs as shown below:
 
 ![Alt text](img/2023-09-21_13-02-10.png)
 
-Remember, the external API won't like the format of that data. We need to apply some data transform to send the data is the expected format. In Flow designer we camn use 'Transforms* to dynamically transform the data on fields. 
+Remember, the external API won't accept the format of that data. We need to apply some data transformation to send the data in the expected format. In Flow Designer, we can use 'Transforms' to dynamically modify the data in fields.
 
-Let's start with the formating of the date of birth. remember in the ServiceNow record the format of the date is MM/DD/YYYY but we need to send to the API in that format YYYY-MM-DD.
+Let's begin with the formatting of the date of birth. Remember that in the ServiceNow record, the date format is MM/DD/YYYY, but we need to send it to the API in the format YYYY-MM-DD.
 
 If you click the value in the **dateofbirth** field, it will show a **fx** icon, click on it, then type **Replace** (2), then select **Replace String** (3), we that Transforms we can use a simple regular expression to match the string to replace.
 
@@ -339,9 +333,9 @@ $3 refers to the contents of capturing group 3, which is the year "2023."
 $1 refers to the contents of capturing group 1, which is the month "12."
 $2 refers to the contents of capturing group 2, which is the day "31."
 
-This allow us to format the date the way we want. there might be other way to do this too.
+This allows us to format the date as desired, although there might be other ways to achieve this as well.
 
-Let's perform some data transformation for the First Name and Last Name fields. They come in uppercase from ServiceNow, but the external API expects these values with only the first letter of the first name and the first letter of the last name in uppercase. Therefore, we need to transform the data to make it compatible. We could probably use some existing Transforms to do this, but we want to show you another method for more advanced data transformation. you can use the script inline feature on the field to transform the data.
+Now, let's perform some data transformation for the First Name and Last Name fields. They arrive in uppercase from ServiceNow, but the external API expects these values with only the first letter of the first name and the first letter of the last name in uppercase. Therefore, we need to transform the data to make it compatible. We could potentially use existing Transforms to accomplish this, but we want to introduce another method for more advanced data transformation. You can use the inline script feature on the field to transform the data.
 
 Beside the firstname field, click that Toggle Scripting icon as shown below 
 
@@ -425,7 +419,7 @@ Then click **Add and Action, Flow Logic, or Subflow**
 
 ![Alt text](img/2023-09-22_08-08-30.png)
 
-We want to add logic to the flow so that if the API confirms the user's existence (meaning the visitor have been authorized and registered in that external visitor access ap), we can retrieve the output from the API and update the record with details about the user's authorizations.
+We want to incorporate logic into the flow so that if the API confirms the user's existence (indicating that the visitor has been authorized and registered in the external visitor access app), we can retrieve the output from the API and update the record with information about the user's authorizations.
 
 Add a **IF** statement by clicking **Flow Logic** (1), then **If** (2)
 
