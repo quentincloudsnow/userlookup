@@ -175,7 +175,11 @@ and click on the output detail (1)
 
 You should see a screen similar to this. Notice the response returned by the API. It contains the return code, message and additional user information. Our new Spoke Action works!
 
-Now let's use from a flow! 
+Before you proceed to the next step,on your new Action please make sure to click "Save" (1) and then "Publish" (2) to ensure that the Action is saved and includes the update we added to the flow (changing the Connection Alias).
+
+![Alt text](img/2023-10-06_13-31-13.png)
+
+Now let's use that Spoke Action from a flow! 
 
 Click on the Home button to return to the main page of flow designer
 
