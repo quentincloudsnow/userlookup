@@ -1,4 +1,4 @@
-# Integration Hub Lab
+# Integration Hub Lab - Xanadu Release
 
 ## Introduction
 
