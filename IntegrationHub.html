@@ -1,0 +1,897 @@
+<h1 id="integration-hub-lab---xanadu-release">Integration Hub Lab -
+Xanadu Release</h1>
+<h2 id="introduction">Introduction</h2>
+<p>IntegrationHub is the central place on the platform for consuming,
+creating, and managing integrations on your ServiceNow instance. In the
+event that you are seeking to connect a workflow to an external system,
+but ServiceNow or ServiceNow technology partners do not offer an
+out-of-the-box integration (Spoke) for it, you can easily create your
+own. IntegrationHub provides numerous Action Steps to connect your
+workflow to external systems that use protocols such as REST,
+PowerShell, SSH, etc. In this lab, we will focus on REST
+integration.</p>
+<h2 id="goal">Goal</h2>
+<p>In this lab, we will showcase the new ‘Spoke Generator’ capability.
+This feature enables you to generate new spokes and spoke actions for
+third-party APIs that adhere to the OpenAPI specification. You will be
+using a provided YAML file.</p>
+<blockquote>
+<p>A YAML file for OpenAPI specs is a user-friendly configuration file
+that defines the structure, endpoints, and details of a RESTful API. It
+makes it easier for developers to document and communicate the API’s
+design. The spoke generator can automatically utilize this YAML file to
+create spoke actions.</p>
+</blockquote>
+<p>This innovative feature, the “Spoke Generator,” significantly reduces
+the time required to create a new integration.</p>
+<h2 id="use-case">Use case</h2>
+<p>ACME Inc. currently uses a third-party system for managing visitor
+access and authorization to their buildings, which is overseen by a
+Security and Property Management company. ACME Inc. aims to enhance the
+experience for both visitors and employees. They utilize ServiceNow and
+intend to automate the process of verifying visitor access and printing
+badges through ServiceNow workflows. ACME Inc. has developed a
+modernized experience using the ServiceNow platform, allowing visitors
+to independently check in via kiosks located at the reception of each
+building.</p>
+<p>However, there are no pre-built integrations available for the
+Visitor Access application, which is hosted and managed externally to
+the ServiceNow Platform. As ServiceNow developers, our task is to create
+this integration (Spoke) so that we can retrieve information from this
+remote system through a workflow triggered when a visitor checks in at
+the kiosk.</p>
+<p>In this scenario, you had a meeting with the administrator of the
+third-party visitor access app who has supplied you with the following
+API documentation: <a
+href="https://quentincloudsnow.github.io/userlookup/#/default/get_checkUser">API
+Documentation Link</a>. You can click the link to gain an understanding
+of how this API functions.</p>
+<p>This API is relatively straightforward. As you can observe, it
+consists of only one API method, ‘checkUser,’ and this method
+necessitates three inputs.”</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>firstname</td>
+<td>string</td>
+</tr>
+<tr>
+<td>lastname</td>
+<td>string</td>
+</tr>
+<tr>
+<td>dateofbirth</td>
+<td>YYY-MM-DD</td>
+</tr>
+</tbody>
+</table>
+<p>By providing the user information, the API will return a message
+indicating whether a user exists or not. If the user does exist, it will
+also provide additional information that you will need to utilize within
+a ServiceNow workflow. You can refer to the example of the response
+returned by the API for clarification</p>
+<pre><code>  {
+  &quot;code&quot;: &quot;0&quot;,
+  &quot;message&quot;: &quot;User exists&quot;,
+  &quot;user&quot;: {
+     &quot;guest_title&quot;: &quot;Guest&quot;,
+     &quot;phone&quot;: &quot;123-456-7890&quot;,
+     &quot;host_name&quot;: &quot;Jane Smith&quot;,
+     &quot;host_id_number&quot;: &quot;987654&quot;,
+     &quot;host_email&quot;: &quot;jane@example.com&quot;,
+     &quot;guest_email&quot;: &quot;john@example.com&quot;,
+     &quot;building_location&quot;: &quot;Building A&quot;,
+     &quot;access_expiration&quot;: &quot;2023-12-31&quot;
+           }
+  }</code></pre>
+<p>In the JSON response, you will receive a ‘code’ indicating success
+(0), a ‘message’ confirming the user’s existence, and comprehensive
+‘user’ information, which includes guest title, phone number, host name,
+host ID number, email addresses, building location, and access
+expiration date. If the user does not exist, you will receive a code 1.
+In our particular scenario, the user data obtained from the response
+will be utilized to print a badge for the visitor. (The badge printing
+process is addressed in another lab using our RPA Hub technology.)</p>
+<h2 id="creating-the-spoke">Creating the spoke</h2>
+<p>Log in to your instance, then, on the main page, click
+<strong>All</strong> (1). Next, type <strong>flow</strong> (2) and click
+<strong>Flow Designer</strong> (3) to open the Flow Designer UI.</p>
+<figure>
+<img src="img/2023-09-21_07-13-57.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Once you are in the <strong>Flow Designer</strong> UI, to access the
+Spoke Generator, select <strong>Create New</strong> (1) (located on the
+right-hand side of the screen), and then click on
+<strong>Spoke</strong>.</p>
+<figure>
+<img src="img/2024-10-30_07-53-26.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>The Spoke Generator will request the following information from you:
+a thumbnail image (1) (you can upload a thumbnail image to serve as your
+Spoke logo; feel free to find a free image on Google Images and upload
+it here), a Spoke Name (2), and a Description (3).</p>
+<figure>
+<img src="img/2024-10-30_07-57-40.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spoke Name</td>
+<td>Visitor Access</td>
+</tr>
+<tr>
+<td>App Scope Name</td>
+<td>This field is generated automatically from the Spoke Name</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>This spoke will be used to verify if visitor has been registered in
+the Visitor Access app</td>
+</tr>
+</tbody>
+</table>
+<p>Once you have set the value, click Continue</p>
+<p>On the next screen, you will be prompted to select the method you
+wish to use for creating your new spoke. We intend to utilize the
+OpenAPI Specification method, as we have been furnished with the YAML
+file that describes the API and adheres to the OPENAPI
+Specification.</p>
+<p>Select <strong>OpenAPI (1) then click </strong>Continue** (2)</p>
+<figure>
+<img src="img/2024-10-30_08-01-37.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>On the next screen, <strong>Visitor Access: Add operations</strong>,
+this is where you can provide the YAML file. Click <strong>Import
+New</strong> (1), and then provide the url to the YAML file, copy URL
+from the link here <a
+href="https://quentincloudsnow.github.io/userlookup/swagger.yaml">Swagger
+YAML File</a>.</p>
+<figure>
+<img src="img/2023-09-21_07-39-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Paste the URL copied in your clipboard in the previous step, then
+paste it in the <strong>OpenAPI URL</strong> field (1), then click
+<strong>Import</strong> (2)</p>
+<figure>
+<img src="img/2023-09-21_07-42-47.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Once the import is done you should see someting similar to this</p>
+<figure>
+<img src="img/2023-09-21_07-44-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Then click on <strong>Create New</strong> next to the
+<strong>Connection Alias field</strong> (1)</p>
+<blockquote>
+<p>Note: In ServiceNow, a Connection Alias is a configuration setting
+used to establish and oversee connections with external systems. It
+functions as an abstraction layer for connecting to external systems and
+streamlines the integration process within ServiceNow workflows and
+other components. Normally, when connecting ServiceNow to an external
+system, you must configure the URL of the endpoint (the third-party
+system) and specify how to authenticate with it. This is accomplished
+through Connection and Credentials settings in ServiceNow. In practice,
+it is essential to engage in discussions with the administrator of the
+remote system and coordinate with the security team before initiating
+this configuration.</p>
+</blockquote>
+<figure>
+<img src="img/2023-09-21_07-45-32.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In the <strong>Connection alias name</strong> (1) type
+<strong>VisitorAppConnection</strong> and keep the
+<strong>Authentication Configuration Template</strong> with the default
+value <strong>Api Key Template</strong> (2), then click <strong>Create
+Alias and continue</strong> (3)</p>
+<p><img src="img/2023-09-21_07-51-43.png" alt="Alt text" /> On the next
+screen, copy/past this value
+https://automationengine.westus2.cloudapp.azure.com into the
+<strong>Connection URL</strong> (1) , on the Credential information
+<strong>API Key</strong> (2) , type the value ABC.. (It does not matter
+the value we put in the API Key, for this lab the app does not require
+authentication…) Click Submit (3)</p>
+<figure>
+<img src="img/2024-10-30_08-08-43.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>Click <strong>Generate operation</strong> (1)</p>
+<figure>
+<img src="img/2023-09-21_07-56-49.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>The system will then prompt you to select which Spoke Action you want
+to create as shown below</p>
+<figure>
+<img src="img/2023-09-21_07-59-26.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<blockquote>
+<p>Note: For this lab, we are utilizing a very basic API designed
+explicitly for lab and educational purposes. This API consists of just
+one method, which is why only one action is visible. In real-world
+scenarios, most commercial applications you endeavor to integrate will
+have dozens or even hundreds of methods within their API. You will have
+the option to choose the methods you wish to utilize from ServiceNow and
+create Spoke Actions for them.</p>
+</blockquote>
+<p>Select the ** Check if a user exists** (1) Action then click
+<strong>Publish</strong> (2)</p>
+<figure>
+<img src="img/2023-09-21_08-16-44.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Click Go to Spoke</p>
+<figure>
+<img src="img/2024-10-30_08-14-41.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>Click the newly created Spoke Action <strong>Check if a user
+exists</strong> (1) this will open the Action editor in Flow designer so
+we can inspect it</p>
+<figure>
+<img src="img/2023-09-21_08-21-50.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Notice the Action Input section, the Inputs for that Spoke action was
+created automatically</p>
+<figure>
+<img src="img/2024-10-30_08-19-49.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>Click the OpenAPI/Postman Step (1)</p>
+<figure>
+<img src="img/2023-09-21_08-24-59.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Notice the step inputs, they are using the Action inputs, so the
+values from the Action Inputs will be passed as parameters when the API
+Call is made to the external system.</p>
+<figure>
+<img src="img/2024-10-30_08-17-13.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>On the right hand-side notice the outputs available from the OpenAPI
+Step, expand the <strong>user</strong> (1) section as shown below:</p>
+<figure>
+<img src="img/2024-10-30_08-25-54.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>Those are all the values that we can retrieve from the external app
+and use in a ServiceNow Workflow.</p>
+<p>It’s time to test that Spoke Action! Click on the
+<strong>Test</strong> button</p>
+<figure>
+<img src="img/2024-10-30_08-27-12.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>You will be prompted to enter some user information,
+<strong>dateofbirth</strong> (1), <strong>firstname</strong> (2),
+<strong>lastname</strong> (3) please use those values below</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dateofbirth</td>
+<td>1984-01-25</td>
+</tr>
+<tr>
+<td>firstname</td>
+<td>Ashley</td>
+</tr>
+<tr>
+<td>lastname</td>
+<td>Burney</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="img/2023-09-21_08-40-17.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Then click <strong>Run Test</strong> (4)</p>
+<blockquote>
+<p>Note: Typically those values will be passed to the action via a
+Workflow. we are just testing the action manually right now.</p>
+</blockquote>
+<p>Once the Action has been executed, click on <strong>Your test has
+finished running. View the Action execution details</strong> (1) to
+inspect the response we have received from the external system.</p>
+<figure>
+<img src="img/2023-09-21_08-42-26.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>On the <strong>Execution Details</strong> page, scroll down until you
+see the <strong>ouput Data</strong> section and click on the output
+detail (1)</p>
+<figure>
+<img src="img/2023-09-21_08-52-31%20(1).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>You should see a screen similar to this. Notice the response returned
+by the API. It contains the return code, message and additional user
+information. Our new Spoke Action works!</p>
+<p>Now let’s use that Spoke Action from a flow!</p>
+<p>Click on the Workflow Studio icon (top left cordner)</p>
+<figure>
+<img src="img/2024-10-30_08-30-19.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>In the following steps, we just want to show a builder can
+consume/use the new Spoke Action that we have created.</p>
+<p>Click on <strong>New</strong> (1) then <strong>Subflow</strong>
+(2)</p>
+<figure>
+<img src="img/2024-10-30_08-31-52.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<p>Enter a <strong>Subflow name</strong> (put the name you want) and
+click <strong>submit</strong> (leave all other field with default
+values)</p>
+<figure>
+<img src="img/2024-10-30_08-33-25.png" alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
+<blockquote>
+<p>Note: Typically a builder would create a new flow or subflow in his
+own Application Scope, but for a quick test in a lab instance it doesn’t
+matter we can save it in the Global scope.</p>
+</blockquote>
+<figure>
+<img src="img/2023-09-21_09-02-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>A new tab will open for your new subflow, under
+<strong>ACTIONS</strong> Click <strong>Add an Action, Flow Logic or
+Subflow</strong> (1)</p>
+<figure>
+<img src="img/2023-09-21_09-05-10.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Select Action then type <strong>Visit</strong>, this should display
+your new spoke <strong>Visitor Access</strong> (2), click on it then
+click the action <strong>Check if a useer exists</strong> (3)</p>
+<figure>
+<img src="img/2023-09-21_09-07-17.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Now we can pass the value to the action, here we are going to
+hardcode values just for test purposes, typically we would lookup a
+record in ServiceNow and pass values from that record to the action. We
+will cover that in detail in the optional section of the lab.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dateofbirth</td>
+<td>1984-01-25</td>
+</tr>
+<tr>
+<td>firstname</td>
+<td>Ashley</td>
+</tr>
+<tr>
+<td>lastname</td>
+<td>Burney</td>
+</tr>
+</tbody>
+</table>
+<p>Using the values from the table above, set the
+<strong>dateofbirth</strong> (1). <strong>firstname</strong> (2).
+<strong>lastname</strong> (3) then click <strong>Done</strong> (4) and
+click the <strong>Test</strong> button.</p>
+<figure>
+<img src="img/2023-09-21_09-14-06.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>then click <strong>Run Test</strong> (1)</p>
+<figure>
+<img src="img/2023-09-21_09-18-03.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Click <strong>Your Test has finished running, View the subflow
+exectution details</strong></p>
+<figure>
+<img src="img/2023-09-21_09-20-06.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In this lab, we’ve learned how to create a new Spoke using the Spoke
+Generator, allowing us to integrate ServiceNow with an external
+application featuring a usable API. In the optional section of this lab,
+we will delve into more advanced concepts of Flow Designer/Ihub and
+demonstrate how to employ the value retrieved from the Spoke action to
+update a record in ServiceNow.</p>
+<blockquote>
+<p>Note: With the Spoke Generator, you no longer need to manually
+configure the REST Step and JSON Parser Step; the Spoke action generated
+by the Spoke Generator handles this automatically for you.</p>
+</blockquote>
+<h1 id="optional-section">Optional section</h1>
+<h2 id="introduction-1">Introduction</h2>
+<p>Handling integrations is often not as straightforward as this lab may
+suggest. In the previous section of the lab, the data was sent to the
+API in the same format as it was in ServiceNow. However, in this
+scenario, we are sending data to an API that expects the data to be in a
+specific format. In this optional lab, we will explore how to apply data
+transformation in Flow Designer before sending the data to the external
+API.</p>
+<p>On your instance, navigate to the <strong>All</strong> menu (1) and
+in the filter navigator (2), type “x_snc_visitoracc_0_visitors_list.do”
+and press enter to open that custom table.</p>
+<figure>
+<img src="img/2023-09-21_12-01-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In this use case, a custom table is utilized by a ServiceNow app
+developed by ACME Inc. When a visitor checks in at the reception of
+their building, they can scan their government ID. Using our DocIntel
+capability, a new record is generated in that table for the visitor.
+Information such as the First Name, Last Name, and Date of Birth of the
+visitor is then extracted from their government ID and stored in that
+table. In the following section, we will concentrate on creating the
+workflow that will take this data, transform it, and utilize it with the
+new spoke we created earlier in this lab.</p>
+<p>Please note the following details: Visitor First Name and Visitor
+Last Name values (1) are in uppercase. Additionally, observe the Date of
+Birth (2), which is in the MM/DD/YYYY format.</p>
+<figure>
+<img src="img/2023-09-21_12-27-20.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>The external API for which we previously created a new spoke action
+won’t recognize those values in that format. The API expects the format
+to be Firstname, Lastname, and a date in the YYYY-MM-DD format.</p>
+<p>Now, let’s create the workflow that will query the API to verify
+whether the user has the necessary authorization to access the building.
+We will utilize a Data Transform and our newly created Spoke Action for
+this purpose.</p>
+<p>Open Flow Designer</p>
+<figure>
+<img src="img/2023-09-21_12-35-12.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Click <strong>Create new</strong> (1) then <strong>Flow</strong>
+(2)</p>
+<figure>
+<img src="img/2023-09-21_12-37-28.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Type the value <strong>Verify Access Request</strong> on the
+<strong>Flow Name</strong> field (1) then click <strong>Submit</strong>
+(2)</p>
+<figure>
+<img src="img/2023-09-21_12-39-32.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>If you get this message, click <strong>Skip tour</strong></p>
+<figure>
+<img src="img/2023-09-21_12-41-26.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Click <strong>Add a trigger</strong> (1) to set the condition to
+trigger that flow.</p>
+<figure>
+<img src="img/2023-09-21_12-42-11.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Select <strong>Record</strong> (1) then click
+<strong>Updated</strong> (2).</p>
+<figure>
+<img src="img/2023-09-21_12-43-19.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Select the <strong>visitors</strong> (1) table from the list then
+click <strong>Add Filters</strong> (2)</p>
+<p>Set the condition as shown below</p>
+<figure>
+<img src="img/2023-09-21_12-46-22.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<blockquote>
+<p>Note: With the condition we are setting above, the flow will be
+triggered as soon as Docintel extracts data from the visitor’s
+government ID and updates the visitor record associated with that
+visitor.</p>
+</blockquote>
+<p>Now we need to add to our flow the spoke action that we have created
+earlier in this lab.</p>
+<p>Under the <strong>Actions</strong> section, click
+<strong>Action</strong> (1), type <strong>visitor access</strong> (2)
+then select <strong>Visitor Access</strong> from the <strong>INSTALLED
+SPOKES</strong> list (3) then click <strong>Check if a use
+exists</strong> (4)</p>
+<figure>
+<img src="img/2023-09-21_12-50-00.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>You should see a screen as shown below</p>
+<figure>
+<img src="img/2023-09-21_12-52-53.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>We need to pass the data from the record to that Action step.</p>
+<p>Expand the Visitors Record secrtion in the data pill as shown
+below:</p>
+<figure>
+<img src="img/2023-09-21_12-56-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Then scroll down to see fields we need, <strong>visitor dob</strong>,
+<strong>visitor lastname</strong>, <strong>visitor
+firstname</strong>,</p>
+<p>Grab those data fields and drop thenm to our action inputs as shown
+below:</p>
+<figure>
+<img src="img/2023-09-21_13-02-10.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Remember, the external API won’t accept the format of that data. We
+need to apply some data transformation to send the data in the expected
+format. In Flow Designer, we can use ‘Transforms’ to dynamically modify
+the data in fields.</p>
+<p>Let’s begin with the formatting of the date of birth. Remember that
+in the ServiceNow record, the date format is MM/DD/YYYY, but we need to
+send it to the API in the format YYYY-MM-DD.</p>
+<p>If you click the value in the <strong>dateofbirth</strong> field, it
+will show a <strong>fx</strong> icon, click on it, then type
+<strong>Replace</strong> (2), then select <strong>Replace
+String</strong> (3), we that Transforms we can use a simple regular
+expression to match the string to replace.</p>
+<figure>
+<img src="img/2023-09-21_13-08-32%20(2).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>On the <strong>Regex</strong> field (1) type this value
+<strong>()/()/()</strong> and on the <strong>Replace String</strong>
+field (2) type this value <strong>$3-$1-$2</strong></p>
+<figure>
+<img src="img/2023-09-21_13-15-37.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<blockquote>
+<p>Additional reading if interested to learn more about Regular
+expression, otherwise skip this. The regex pattern
+<code>(\d{2})/(\d{2})/(\d{4})</code> is used to match and capture date
+strings in the format MM/DD/YYYY. Here’s what each part of the pattern
+does:</p>
+</blockquote>
+<ol type="1">
+<li><p><code>(\d{2})</code>: This part captures two digits (0-9) and
+encloses them in parentheses to create a capturing group. It’s used to
+match the month portion of the date (MM). <code>\d</code> represents any
+digit, and <code>{2}</code> specifies that exactly two digits must be
+matched.</p></li>
+<li><p><code>/</code>: This part matches the forward slash character (/)
+literally. It’s used to separate the month, day, and year portions of
+the date.</p></li>
+<li><p><code>(\d{2})</code>: Similar to the first part, this captures
+two digits (0-9) to match the day portion of the date (DD).</p></li>
+<li><p><code>/</code>: Another forward slash to separate the day and
+year.</p></li>
+<li><p><code>(\d{4})</code>: This captures four digits (0-9) to match
+the year portion of the date (YYYY).</p></li>
+</ol>
+<p>So, when you apply this regex pattern to a string, it will capture
+date strings in the format MM/DD/YYYY and store the month, day, and year
+portions as separate capturing groups, allowing you to extract and work
+with these components individually.</p>
+<p>In the replace string field we have typed
+<strong>$3-$1-$2</strong></p>
+<p>$3 refers to the contents of capturing group 3, which is the year
+“2023.” $1 refers to the contents of capturing group 1, which is the
+month “12.” $2 refers to the contents of capturing group 2, which is the
+day “31.”</p>
+<p>This allows us to format the date as desired, although there might be
+other ways to achieve this as well.</p>
+<p>Now, let’s perform some data transformation for the First Name and
+Last Name fields. They arrive in uppercase from ServiceNow, but the
+external API expects these values with only the first letter of the
+first name and the first letter of the last name in uppercase.
+Therefore, we need to transform the data to make it compatible. We could
+potentially use existing Transforms to accomplish this, but we want to
+introduce another method for more advanced data transformation. You can
+use the inline script feature on the field to transform the data.</p>
+<p>Beside the firstname field, click that Toggle Scripting icon as shown
+below</p>
+<figure>
+<img src="img/2023-09-21_13-26-47.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>add this piece of code:</p>
+<pre><code>  // Access the value you want to transform
+  var inputString = fd_data.trigger.current.visitor_firstname; // Replace &#39;your_field_name&#39; with the actual field name
+
+  // Check if the inputString is not empty
+  if (inputString) {
+     // Convert the string to lowercase, except the first character
+     var firstChar = inputString.charAt(0);
+     var restOfString = inputString.slice(1).toLowerCase();
+     var transformedString = firstChar + restOfString;
+     
+     // Return the transformed value
+     return transformedString;
+  } else {
+     // If the input is empty, return it as-is
+     return inputString;
+  }</code></pre>
+<p>On the <strong>lastname</strong> field add this piece of code</p>
+<pre><code>  // Access the value you want to transform
+  var inputString = fd_data.trigger.current.visitor_lastname; // Replace &#39;your_field_name&#39; with the actual field name
+
+  // Check if the inputString is not empty
+  if (inputString) {
+     // Convert the string to lowercase, except the first character
+     var firstChar = inputString.charAt(0);
+     var restOfString = inputString.slice(1).toLowerCase();
+     var transformedString = firstChar + restOfString;
+
+     // Return the transformed value
+     return transformedString;
+  } else {
+     // If the input is empty, return it as-is
+     return inputString;
+  }</code></pre>
+<p>In summary, this script capitalizes the first letter of the input
+string while converting the rest of the string to lowercase. If the
+input is empty, it returns an empty string. This transformation ensures
+that the format matches the expectations of the external API
+endpoint.”</p>
+<p>It is time to test if our Transforms work.</p>
+<p>Click Test to try your flow</p>
+<figure>
+<img src="img/2023-09-22_07-52-53.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Pick a record from the list (1) then click <strong>Run Test</strong>
+(2)</p>
+<figure>
+<img src="img/2023-09-22_07-57-14.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Click on <strong>“Your test has finished running. View the flow
+execution details”</strong></p>
+<figure>
+<img src="img/2023-09-22_07-58-35.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In the <strong>TRIGGER</strong> section, on the right-hand side,
+single click on the <strong>Open Current record</strong> to inspect the
+values of that record</p>
+<figure>
+<img src="img/2023-09-22_08-00-51.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Scroll down to see the values for visitor firstname, visitor lasname,
+visitor dob</p>
+<figure>
+<img src="img/2023-09-22_08-02-52.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Notice the value are all stored in uppercase in ServiceNow, and the
+date of birth is not in the format that the API End point wants.Let Now
+see if our transfroms have worked.</p>
+<p>Click on the <strong>Check if a user exists</strong> (1) step to
+check if the values were transformed correctly:</p>
+<figure>
+<img src="img/2023-10-05_08-43-30.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>If you continue to scroll down, you should be able to see the output
+that contains the response from the API End point</p>
+<figure>
+<img src="img/2023-09-22_08-06-38.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>We are going to add steps to our flow to update the source record in
+ServiceNow with the values received from the external system (API
+endpoint). Please return to the ‘Verify Access Request’ flow.</p>
+<p>Then click <strong>Add and Action, Flow Logic, or
+Subflow</strong></p>
+<figure>
+<img src="img/2023-09-22_08-08-30.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>We want to incorporate logic into the flow so that if the API
+confirms the user’s existence (indicating that the visitor has been
+authorized and registered in the external visitor access app), we can
+retrieve the output from the API and update the record with information
+about the user’s authorizations.</p>
+<p>Add a <strong>IF</strong> statement by clicking <strong>Flow
+Logic</strong> (1), then <strong>If</strong> (2)</p>
+<figure>
+<img src="img/2023-09-22_08-15-35.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In the <strong>Condition Label</strong> field (1), copy and paste
+this text : “User has been pre registered in remote visitor
+system”<br />
+&gt; this is just to make it easier for someone who read the flow to
+understand the logic</p>
+<p>then in the Condition</p>
+<figure>
+<img src="img/2023-09-22_08-17-34%20(2).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>In the Condition Section, Click the <strong>Data pill</strong> icon
+(1) then select <strong>1 - Check if A user Exists</strong> (2),
+<strong>output</strong> (3), then <strong>code</strong> (4)</p>
+<figure>
+<img src="img/2023-09-22_08-19-27%20(1).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>type the value <strong>0</strong> (1) as shown and click
+<strong>Done</strong> (2)</p>
+<figure>
+<img src="img/2023-09-22_08-22-50.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<blockquote>
+<p>We know that when the API return code 0 means that the user have been
+found in the remote system</p>
+</blockquote>
+<p>Now the the condition is set correctly we need to add a step to
+update the user record in servicenow when we meet this condition.</p>
+<p>Clickl the <strong>then</strong> section as shown</p>
+<figure>
+<img src="img/2023-09-22_08-25-51.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Then Click <strong>Action</strong> (1), type <strong>update
+record</strong>, then click <strong>Update record</strong></p>
+<figure>
+<img src="img/2023-09-22_08-26-55%20(1).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Drag the <strong>Visitors Record</strong> (1) from the data pill on
+the right hand side, then drop into the Record field of the
+<strong>Update Record</strong> step (2) as shown</p>
+<figure>
+<img src="img/2023-09-22_08-29-09.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>This should set tghe right Table on the table field automatically as
+shown below</p>
+<p>Click <strong>Add Field value</strong> (1)</p>
+<figure>
+<img src="img/2023-09-22_08-31-07%20(1).png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>then add those fields</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Access Expiration</td>
+</tr>
+<tr>
+<td>Building Location</td>
+</tr>
+<tr>
+<td>Guest Title</td>
+</tr>
+<tr>
+<td>guest email</td>
+</tr>
+<tr>
+<td>host email</td>
+</tr>
+<tr>
+<td>host id number</td>
+</tr>
+<tr>
+<td>Guest phone</td>
+</tr>
+<tr>
+<td>Host name</td>
+</tr>
+<tr>
+<td>visitor requested</td>
+</tr>
+</tbody>
+</table>
+<p>Drag each values from the data pill on the right hand side (Trigger -
+Record Updated - Visitor Record) to the corresponding field on the
+record</p>
+<figure>
+<img src="img/2023-09-22_08-36-04.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>The last field, <strong>visitor requesed</strong> is a true/false
+type, you just need to click the check box as shown</p>
+<figure>
+<img src="img/2023-09-22_08-39-32.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>With the step we just added, if the user is found in the Visitor
+Access system, we then take all the information returned from the API
+and update the record in ServiceNow with those.</p>
+<p>In the case the user is not found in the Visitor Access system, we
+just want to write a log. let just add that step.</p>
+<p>Add a Else statement to your flow as shown, click <strong>Add an
+Action, Flow Logic, or Subflow</strong>, then select <strong>Flow
+logic</strong> (1), <strong>Else</strong> (2)</p>
+<figure>
+<img src="img/2023-09-22_08-42-55.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Add the <strong>Log</strong> step by click on <strong>Action</strong>
+(1), then type <strong>log</strong> (2), then click <strong>ServiceNow
+Core</strong> (3) then click <strong>Log</strong> (4)</p>
+<figure>
+<img src="img/2023-09-22_08-46-44.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>On the <strong>Field</strong> (1), copy and past this value :
+“<strong>No record in Visitor access app found for that user</strong>”
+then click <strong>Done</strong> (2)</p>
+<figure>
+<img src="img/2023-09-22_08-48-49.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>We are done builing the flow, it should look like this</p>
+<figure>
+<img src="img/2023-09-22_08-51-09.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>It’s time to test it, click the Test button, select a <strong>visitor
+record</strong> (2) then click <strong>Run Test</strong> (2)</p>
+<p>Open the execution detail of the flow to see if has updated the
+record with the values coming from the API</p>
+<p>If the step Update Record shows <strong>Completed</strong> it means
+it the record was successfully updated!</p>
+<figure>
+<img src="img/2023-09-22_08-55-26.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>Feel free to go on the custom visitors table to verify that the
+record was update with the values from the API:</p>
+<p>click on the <strong>All</strong> menu (1) and in the filter
+navigator (2) type the x_snc_visitoracc_0_visitors_list.do and press
+enter to open that custom table.</p>
+<figure>
+<img src="img/2023-09-21_12-01-25.png" alt="Alt text" />
+<figcaption aria-hidden="true">Alt text</figcaption>
+</figure>
+<p>All the field on the visitor record you have used for your test
+should now be updated</p>
+<p><img src="img/2023-09-22_09-00-38%20(1).png" alt="Alt text" /><img
+src="img/2023-09-22_09-01-06.png" alt="Alt text" /></p>
+<p>Congratulations, this marks the end of the optional section. You have
+learned how to transform data before sending it via a custom spoke that
+we have built!</p>
