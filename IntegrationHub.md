@@ -58,11 +58,11 @@ Log in to your instance, then, on the main page, click **All** (1). Next, type *
 
 Once you are in the **Flow Designer** UI, to access the Spoke Generator, select **Create New** (1) (located on the right-hand side of the screen), and then click on **Spoke**.
 
-![Alt text](img/2023-09-21_07-19-21.png)
+![alt text](img/2024-10-30_07-53-26.png)
 
-The Spoke Generator will request the following information from you: a thumbnail image (1) (you can upload a thumbnail image to serve as your Spoke logo; feel free to find a free image on Google Images and upload it here), a Spoke Name (2), and a Description (4).
+The Spoke Generator will request the following information from you: a thumbnail image (1) (you can upload a thumbnail image to serve as your Spoke logo; feel free to find a free image on Google Images and upload it here), a Spoke Name (2), and a Description (3).
 
-![Alt text](img/2023-09-21_07-27-27.png)
+![alt text](img/2024-10-30_07-57-40.png)
 
 | Field | Value |
    |-------|-------|
@@ -70,15 +70,14 @@ The Spoke Generator will request the following information from you: a thumbnail
    | App Scope Name | This field is generated automatically from the Spoke Name |
    | Description | This spoke will be used to verify if visitor has been registered in the Visitor Access app |
 
-Once you have set the value, click Create and Continue (1) as shown below:
+Once you have set the value, click Continue
 
-   ![Alt text](img/2023-09-21_07-33-06.png)
 
 On the next screen, you will be prompted to select the method you wish to use for creating your new spoke. We intend to utilize the OpenAPI Specification method, as we have been furnished with the YAML file that describes the API and adheres to the OPENAPI Specification.
 
-Select **OpenAPI Specification** (1) then click **Continue** (2)
+Select **OpenAPI (1) then click **Continue** (2)
 
-![Alt text](img/2023-09-21_07-34-48.png)
+![alt text](img/2024-10-30_08-01-37.png)
 
 On the next screen, **Visitor Access: Add operations**, this is where you can provide the YAML file. Click **Import New** (1), and then provide the url to the  YAML file, copy URL from the link here [Swagger YAML File](https://quentincloudsnow.github.io/userlookup/swagger.yaml).
 
@@ -98,9 +97,13 @@ Then click on **Create New** next to the **Connection Alias field** (1)
 
 ![Alt text](img/2023-09-21_07-45-32.png)
 
-In the **Connection alias name** (1) type **VisitorAppConnection** and keep the **Authentication Configuration Template** with the default value **Api Key Template** (2), then click **Create** (3)
+In the **Connection alias name** (1) type **VisitorAppConnection** and keep the **Authentication Configuration Template** with the default value **Api Key Template** (2), then click **Create Alias and continue** (3)
 
 ![Alt text](img/2023-09-21_07-51-43.png)
+On the next screen, copy/past this value https://automationengine.westus2.cloudapp.azure.com into the **Connection URL** (1) , on the Credential information **API Key** (2) , type the value ABC.. (It does not matter the value we put in the API Key, for this lab the app does not require authentication...)
+Click Submit (3)
+
+![alt text](img/2024-10-30_08-08-43.png)
 
 Click **Generate operation** (1) 
 
@@ -116,39 +119,36 @@ Select the ** Check if a user exists** (1) Action then click **Publish** (2)
 
 ![Alt text](img/2023-09-21_08-16-44.png)
 
+Click Go to Spoke
+
+![alt text](img/2024-10-30_08-14-41.png)
+
 Click the newly created Spoke Action **Check if a user exists** (1) this will open the Action editor in Flow designer so we can inspect it 
 
 ![Alt text](img/2023-09-21_08-21-50.png)
 
 Notice the Action Input section, the Inputs for that Spoke action was created automatically 
 
-![Alt text](img/2023-09-21_08-23-39.png)
+![alt text](img/2024-10-30_08-19-49.png)
 
-Click the OpenAPI Step (1) 
+Click the OpenAPI/Postman Step (1) 
 
 ![Alt text](img/2023-09-21_08-24-59.png)
 
 Notice the step inputs, they are using the Action inputs, so the values from the Action Inputs will be passed as parameters when the API Call is made to the external system.
 
-![Alt text](img/2023-09-21_08-26-21.png)
+![alt text](img/2024-10-30_08-17-13.png)
 
-We need to update the Connection Alias in the Connection Details section. We have precreated in this lab instance a Connection record that point to the right API End point. We are going to use this one. 
-
-Click on the **Connection Alias field** (1) then select **VisitorAccess_ConnectionAlias** (2) 
-
-![Alt text](img/2023-09-21_08-30-48.png)
-
-Notice the **Base URL** field was updated and displays the URL for the API End point. Those connection alias records are typically managed a by Security team or user with higher privileges.
 
 On the right hand-side notice the outputs available from the OpenAPI Step, expand the **user** (1) section as shown below:
 
-![Alt text](img/2023-09-21_08-35-00.png)
+![alt text](img/2024-10-30_08-25-54.png)
 
 Those are all the values that we can retrieve from the external app and use in a ServiceNow Workflow.
 
 It's time to test that Spoke Action! Click on the **Test** button 
 
-![Alt text](img/2023-09-21_08-37-59.png)
+![alt text](img/2024-10-30_08-27-12.png)
 
 You will be prompted to enter some user information, **dateofbirth** (1), **firstname** (2), **lastname** (3) please use those values below
 
@@ -175,23 +175,21 @@ and click on the output detail (1)
 
 You should see a screen similar to this. Notice the response returned by the API. It contains the return code, message and additional user information. Our new Spoke Action works!
 
-Before you proceed to the next step,on your new Action please make sure to click "Save" (1) and then "Publish" (2) to ensure that the Action is saved and includes the update we added to the flow (changing the Connection Alias).
-
-![Alt text](img/2023-10-06_13-31-13.png)
-
 Now let's use that Spoke Action from a flow! 
 
-Click on the Home button to return to the main page of flow designer
+Click on the Workflow Studio icon (top left cordner)
 
-![Alt text](img/2023-09-21_08-57-47.png)
+![alt text](img/2024-10-30_08-30-19.png)
 
 In the following steps, we just want to show a builder can consume/use the new Spoke Action that we have created. 
 
-Click on **Create New** (1) then **Subflow** (2)
+Click on **New** (1) then **Subflow** (2)
 
-![Alt text](img/2023-09-21_08-59-08.png)
+![alt text](img/2024-10-30_08-31-52.png)
 
 Enter a **Subflow name** (put the name you want) and click **submit** (leave all other field with default values)
+
+![alt text](img/2024-10-30_08-33-25.png)
 
 > Note: Typically a builder would create a new flow or subflow in his own Application Scope, but for a quick test in a lab instance it doesn't matter we can save it in the Global scope.
 
